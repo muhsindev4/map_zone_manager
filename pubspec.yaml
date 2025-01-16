@@ -1,7 +1,8 @@
 name: map_zone_manager
-description: "A new Flutter project."
+description: "A Flutter package to manage zones on a Google Map."
 version: 0.0.1
-homepage:
+homepage: https://github.com/muhsindev4/map_zone_manager
+repository: https://github.com/muhsindev4/map_zone_manager
 
 environment:
   sdk: ^3.6.0

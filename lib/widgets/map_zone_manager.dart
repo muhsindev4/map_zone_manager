@@ -241,7 +241,6 @@ class _MapZoneManagerState extends State<MapZoneManager> {
                 markers: _buildMarkers(),
                 polygons: _buildPolygons(),
               ),
-
               Positioned(
                 bottom: 15,
                 right: 0,
@@ -254,10 +253,12 @@ class _MapZoneManagerState extends State<MapZoneManager> {
                           FloatingActionButton(
                             heroTag: 'add_zone',
                             onPressed: () {
-                              if (_mapZoneManagerController!.currentZoneCoordinates !=
+                              if (_mapZoneManagerController!
+                                      .currentZoneCoordinates !=
                                   null) {
                                 _mapZoneManagerController!.addZone(
-                                    _mapZoneManagerController!.currentZoneCoordinates!);
+                                    _mapZoneManagerController!
+                                        .currentZoneCoordinates!);
                               }
                             },
                             child: const Icon(Icons.check),
