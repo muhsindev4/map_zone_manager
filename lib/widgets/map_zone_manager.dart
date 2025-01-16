@@ -224,50 +224,60 @@ class _MapZoneManagerState extends State<MapZoneManager> {
       body: ListenableBuilder(
         listenable: _mapZoneManagerController!,
         builder: (context, child) {
-          return GoogleMap(
-            zoomControlsEnabled: widget.zoomControlsEnabled,
-            zoomGesturesEnabled: widget.zoomGesturesEnabled,
-            myLocationEnabled: widget.myLocationEnabled,
-            myLocationButtonEnabled: widget.myLocationButtonEnabled,
-            style: _mapZoneManagerController!.getStyleJson(widget.mapStyle),
-            initialCameraPosition: _initialCameraPosition,
-            onLongPress: widget.onLongPress,
-            onMapCreated: (controller) {
-              _mapZoneManagerController!.mapController = controller;
-            },
-            onTap: widget.viewOnly ? null : _handleMapTap,
-            markers: _buildMarkers(),
-            polygons: _buildPolygons(),
+          return Stack(
+            children: [
+              GoogleMap(
+                zoomControlsEnabled: widget.zoomControlsEnabled,
+                zoomGesturesEnabled: widget.zoomGesturesEnabled,
+                myLocationEnabled: widget.myLocationEnabled,
+                myLocationButtonEnabled: widget.myLocationButtonEnabled,
+                style: _mapZoneManagerController!.getStyleJson(widget.mapStyle),
+                initialCameraPosition: _initialCameraPosition,
+                onLongPress: widget.onLongPress,
+                onMapCreated: (controller) {
+                  _mapZoneManagerController!.mapController = controller;
+                },
+                onTap: widget.viewOnly ? null : _handleMapTap,
+                markers: _buildMarkers(),
+                polygons: _buildPolygons(),
+              ),
+
+              Positioned(
+                bottom: 15,
+                right: 0,
+                left: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (widget.showAddButton)
+                      widget.addButtonWidget ??
+                          FloatingActionButton(
+                            heroTag: 'add_zone',
+                            onPressed: () {
+                              if (_mapZoneManagerController!.currentZoneCoordinates !=
+                                  null) {
+                                _mapZoneManagerController!.addZone(
+                                    _mapZoneManagerController!.currentZoneCoordinates!);
+                              }
+                            },
+                            child: const Icon(Icons.check),
+                          ),
+                    const SizedBox(height: 10),
+                    if (widget.showResetButton)
+                      widget.resetButtonWidget ??
+                          FloatingActionButton(
+                            heroTag: 'reset_zone',
+                            onPressed: () {
+                              _mapZoneManagerController!.resetCurrentZone();
+                            },
+                            child: const Icon(Icons.clear),
+                          ),
+                  ],
+                ),
+              )
+            ],
           );
         },
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          if (widget.showAddButton)
-            widget.addButtonWidget ??
-                FloatingActionButton(
-                  heroTag: 'add_zone',
-                  onPressed: () {
-                    if (_mapZoneManagerController!.currentZoneCoordinates !=
-                        null) {
-                      _mapZoneManagerController!.addZone(
-                          _mapZoneManagerController!.currentZoneCoordinates!);
-                    }
-                  },
-                  child: const Icon(Icons.check),
-                ),
-          const SizedBox(height: 10),
-          if (widget.showResetButton)
-            widget.resetButtonWidget ??
-                FloatingActionButton(
-                  heroTag: 'reset_zone',
-                  onPressed: () {
-                    _mapZoneManagerController!.resetCurrentZone();
-                  },
-                  child: const Icon(Icons.clear),
-                ),
-        ],
       ),
     );
   }
