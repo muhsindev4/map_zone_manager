@@ -1,5 +1,4 @@
 
-
 # MapZoneManager
 
 `MapZoneManager` is a Flutter package that provides a widget and controller to manage zones on a Google Map. It allows you to create, update, and manage multiple zones, with features for handling map markers, polygons, and custom actions like adding or resetting zones. It supports both single and multi-zone management and is highly customizable with features like custom buttons and map styles.
@@ -8,6 +7,7 @@
 
 
 ![Zone View Demo](https://raw.githubusercontent.com/muhsindev4/map_zone_manager/refs/heads/main/view_zone_demo.gif)
+
 
 
 ## Features
@@ -21,22 +21,48 @@
 - **Zoom Controls**: Enable/disable zoom controls and gestures.
 - **Location Services**: Enable location tracking and display of the user's current location.
 - **Map Styles**: Apply different map styles to customize the appearance of the map.
-
+  
 ## Installation
 
-To add the package to your Flutter project, update your `pubspec.yaml` file:  
+To add the package to your Flutter project, update your `pubspec.yaml` file:
 Run `flutter pub get` to install the dependencies.
 
-dependencies: map_zone_manager: ^0.0.1
+    dependencies:
+      map_zone_manager: ^0.0.1 
+
 ## Usage
 
 ### Basic Usage
 
 To use the `MapZoneManager` widget, you need to add it to your widget tree. Here's a basic example:
 
-import 'package:flutter/material.dart'; import 'package:google_maps_flutter/google_maps_flutter.dart'; import 'package:map_zone_manager/map_zone_manager.dart';     void main() => runApp(MyApp());  
-class MyApp extends StatelessWidget {  
-@override Widget build(BuildContext context) { return MaterialApp( home: Scaffold( appBar: AppBar(title: Text('Map Zone Manager')), body: MapZoneManager( initialCameraPosition: CameraPosition(target: LatLng(37.7749, -122.4194), zoom: 12), multiZone: true, showAddButton: true, showResetButton: true, viewOnly: false, onZoneAdded: (zone) { print('New Zone Added: ${zone.zoneId}'); }, ), ), ); } }
+    import 'package:flutter/material.dart';
+    import 'package:google_maps_flutter/google_maps_flutter.dart';
+    import 'package:map_zone_manager/map_zone_manager.dart';
+    
+    void main() => runApp(MyApp());
+    
+    class MyApp extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) {
+        return MaterialApp(
+          home: Scaffold(
+            appBar: AppBar(title: Text('Map Zone Manager')),
+            body: MapZoneManager(
+              initialCameraPosition: CameraPosition(target: LatLng(37.7749, -122.4194), zoom: 12),
+              multiZone: true,
+              showAddButton: true,
+              showResetButton: true,
+              viewOnly: false,
+              onZoneAdded: (zone) {
+                print('New Zone Added: ${zone.zoneId}');
+              },
+            ),
+          ),
+        );
+      }
+    }
+
 ### Parameters
 
 #### MapZoneManager
@@ -71,8 +97,16 @@ class MyApp extends StatelessWidget {
 
 The `MapZoneManagerController` is a controller class for managing zones and map-related operations. You can use this controller to manage zones, add coordinates, and move the camera to fit a zone.
 
-MapZoneManagerController controller = MapZoneManagerController( onZoneAdded: (zone) { print('New Zone Added: ${zone.zoneId}'); }, multiZone: true, );     controller.createZone();  
-controller.addPositionOnCurrentZone(LatLng(37.7749, -122.4194));
+    MapZoneManagerController controller = MapZoneManagerController(
+      onZoneAdded: (zone) {
+        print('New Zone Added: ${zone.zoneId}');
+      },
+      multiZone: true,
+    );
+    
+    controller.createZone();
+    controller.addPositionOnCurrentZone(LatLng(37.7749, -122.4194));
+
 ## License
 
 This package is licensed under the MIT License. See the LICENSE file for more details.
