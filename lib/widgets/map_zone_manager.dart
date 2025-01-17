@@ -235,8 +235,8 @@ class _MapZoneManagerState extends State<MapZoneManager> {
       _mapZoneManagerController!.zones.map((zone) {
         return Polygon(
           polygonId: PolygonId(zone.zoneId),
-          onTap: (){
-            if(zone.onTap!=null){
+          onTap: () {
+            if (zone.onTap != null) {
               zone.onTap!.call(zone);
             }
           },
@@ -275,131 +275,135 @@ class _MapZoneManagerState extends State<MapZoneManager> {
   @override
   Widget build(BuildContext context) {
     assert(
-    !(widget.showLocationSearch && (widget.googleMapApiKey == null || widget.googleMapApiKey!.isEmpty)),
-    'Google Map API key is required when showLocationSearch is true. Cannot enable search functionality without a valid API key.',
+      !(widget.showLocationSearch &&
+          (widget.googleMapApiKey == null || widget.googleMapApiKey!.isEmpty)),
+      'Google Map API key is required when showLocationSearch is true. Cannot enable search functionality without a valid API key.',
     );
     return ListenableBuilder(
         listenable: _mapZoneManagerController!,
-        builder: (context, child)  {
-        return Stack(
-          children: [
-            GoogleMap(
-              zoomControlsEnabled: widget.zoomControlsEnabled,
-              zoomGesturesEnabled: widget.zoomGesturesEnabled,
-              myLocationEnabled: widget.myLocationEnabled,
-              myLocationButtonEnabled: widget.myLocationButtonEnabled,
-              style: _mapZoneManagerController!.getStyleJson(widget.mapStyle),
-              initialCameraPosition: _initialCameraPosition,
-              onLongPress: widget.onLongPress,
-              onMapCreated: (controller) {
-                _mapZoneManagerController!.mapController = controller;
-              },
-              onTap: widget.viewOnly ? null : _handleMapTap,
-              markers: _buildMarkers(),
-              polygons: _buildPolygons(),
-            ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+        builder: (context, child) {
+          return Stack(
+            children: [
+              GoogleMap(
+                zoomControlsEnabled: widget.zoomControlsEnabled,
+                zoomGesturesEnabled: widget.zoomGesturesEnabled,
+                myLocationEnabled: widget.myLocationEnabled,
+                myLocationButtonEnabled: widget.myLocationButtonEnabled,
+                style: _mapZoneManagerController!.getStyleJson(widget.mapStyle),
+                initialCameraPosition: _initialCameraPosition,
+                onLongPress: widget.onLongPress,
+                onMapCreated: (controller) {
+                  _mapZoneManagerController!.mapController = controller;
+                },
+                onTap: widget.viewOnly ? null : _handleMapTap,
+                markers: _buildMarkers(),
+                polygons: _buildPolygons(),
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    spacing: 10,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (widget.showCloseButton) ...[
+                            widget.closeButtonWidget ??
+                                _iconButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: Icons.close),
+                          ],
+                          if (widget.showAddButton) ...[
+                            widget.addButtonWidget ??
+                                _iconButton(
+                                    onPressed: () {
+                                      if (_mapZoneManagerController!
+                                              .zones.length >
+                                          widget.minimumCoordinatesForAdding) {
+                                        if (widget.onError != null) {
+                                          widget.onError!(
+                                              "At least ${widget.minimumCoordinatesForAdding} coordinates are required to create a zone.");
+                                        }
+                                        return;
+                                      }
+                                      if (_mapZoneManagerController!
+                                              .currentZoneCoordinates !=
+                                          null) {
+                                        _mapZoneManagerController!.addZone(
+                                            _mapZoneManagerController!
+                                                .currentZoneCoordinates!);
 
-                        if(widget.showCloseButton)...[
-                          widget.closeButtonWidget?? _iconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icons.close),
+                                        if (widget.onZoneAdded != null) {
+                                          widget.onZoneAdded!(
+                                              _mapZoneManagerController!
+                                                  .currentZoneCoordinates!);
+                                        }
+                                      }
+                                    },
+                                    icon: Icons.check),
+                          ]
                         ],
+                      ),
+                      if (widget.showLocationSearch)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          child: MapLocationSearch(
+                            googleMapApiKey: widget.googleMapApiKey,
+                            onSelected: (LocationPrediction? selectedLocation) {
+                              if (selectedLocation != null) {
+                                _mapZoneManagerController?.moveCamera(LatLng(
+                                    selectedLocation.latitude!,
+                                    selectedLocation.longitude!));
 
-
-                        if(widget.showAddButton)...[
-                          widget.addButtonWidget?? _iconButton(
-                              onPressed: () {
-
-                                if (_mapZoneManagerController!.zones.length > widget.minimumCoordinatesForAdding) {
-                                  if (widget.onError != null) {
-                                    widget.onError!(
-                                        "At least ${widget.minimumCoordinatesForAdding} coordinates are required to create a zone.");
-                                  }
-                                  return;
-                                }
-                                if (_mapZoneManagerController!
-                                    .currentZoneCoordinates !=
+                                if (widget.onLocationSuggestionSelected !=
                                     null) {
-                                  _mapZoneManagerController!.addZone(
-                                      _mapZoneManagerController!
-                                          .currentZoneCoordinates!);
-
-                                  if (widget.onZoneAdded != null) {
-                                    widget.onZoneAdded!(_mapZoneManagerController!
-                                        .currentZoneCoordinates!);
-                                  }
+                                  widget.onLocationSuggestionSelected
+                                      ?.call(selectedLocation);
                                 }
-                              },
-                              icon: Icons.check),
-                        ]
-
-                      ],
-                    ),
-                    if(widget.showLocationSearch)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      child: MapLocationSearch(
-                        googleMapApiKey: widget.googleMapApiKey,
-                        onSelected: (LocationPrediction? selectedLocation) {
-                          if (selectedLocation != null) {
-                            _mapZoneManagerController?.moveCamera(LatLng(
-                                selectedLocation.latitude!,
-                                selectedLocation.longitude!));
-
-                            if(widget.onLocationSuggestionSelected!=null){
-                              widget.onLocationSuggestionSelected?.call(selectedLocation);
-                            }
-                          }
-
-
-                        },
-                      ),
-                    ),
-
-                    if(widget.showZoneSearch)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 0),
-                        child: ZoneSearchField(
-                          onSelected: (Zone? zone) {
-                            if (zone != null) {
-                              _mapZoneManagerController?.moveCameraToZone(zone);
-                              if(widget.onZoneSuggestionSelected!=null){
-                                widget.onZoneSuggestionSelected?.call(zone);
                               }
-                            }
-                          }, zones: widget.zones??[],
+                            },
+                          ),
                         ),
-                      ),
-
-                  ],
+                      if (widget.showZoneSearch)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0),
+                          child: ZoneSearchField(
+                            onSelected: (Zone? zone) {
+                              if (zone != null) {
+                                _mapZoneManagerController
+                                    ?.moveCameraToZone(zone);
+                                if (widget.onZoneSuggestionSelected != null) {
+                                  widget.onZoneSuggestionSelected?.call(zone);
+                                }
+                              }
+                            },
+                            zones: widget.zones ?? [],
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-
-            if(widget.showDeleteButton&&(_mapZoneManagerController?.currentZoneCoordinates?.coordinates??[]).isNotEmpty)
-            widget.deleteButtonWidget??Positioned(
-              bottom: 15,
-              right: 15,
-              child: _iconButton(
-                  onPressed: () {
-                   _mapZoneManagerController?.resetCurrentZone();
-                  },
-                  icon: Icons.delete),
-            )
-          ],
-        );
-      }
-    );
+              if (widget.showDeleteButton &&
+                  (_mapZoneManagerController
+                              ?.currentZoneCoordinates?.coordinates ??
+                          [])
+                      .isNotEmpty)
+                widget.deleteButtonWidget ??
+                    Positioned(
+                      bottom: 15,
+                      right: 15,
+                      child: _iconButton(
+                          onPressed: () {
+                            _mapZoneManagerController?.resetCurrentZone();
+                          },
+                          icon: Icons.delete),
+                    )
+            ],
+          );
+        });
   }
 }

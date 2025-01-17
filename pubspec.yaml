@@ -4,7 +4,7 @@ description: >
   A powerful Flutter package to create, mark, and manage zones on Google Maps. 
   Includes features like multi-zone support, custom map styles, and camera control for a seamless user experience.
 
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/muhsindev4/map_zone_manager
 repository: https://github.com/muhsindev4/map_zone_manager
 

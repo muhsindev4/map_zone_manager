@@ -9,5 +9,10 @@ class Zone {
   Color? color;
   void Function(Zone zone)? onTap;
 
-  Zone({required this.coordinates, required this.zoneId,required this.zoneName, this.color,this.onTap});
+  Zone(
+      {required this.coordinates,
+      required this.zoneId,
+      required this.zoneName,
+      this.color,
+      this.onTap});
 }
