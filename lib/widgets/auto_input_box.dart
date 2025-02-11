@@ -22,14 +22,18 @@ class AutoInputBox<T> extends StatefulWidget {
   });
 
   @override
-  _AutoInputBoxState<T> createState() => _AutoInputBoxState<T>();
+  State<AutoInputBox<T>> createState() => _AutoInputBoxState<T>();
 }
 
 class _AutoInputBoxState<T> extends State<AutoInputBox<T>> {
   final PublishSubject<String> _subject = PublishSubject<String>();
+
   late OverlayEntry _overlayEntry;
+
   final LayerLink _layerLink = LayerLink();
+
   List<T> _filteredSuggestions = [];
+
   bool _isOverlayVisible = false;
 
   @override

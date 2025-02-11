@@ -12,13 +12,14 @@ class MapLocationSearch extends StatefulWidget {
       {super.key, required this.onSelected, this.googleMapApiKey});
 
   @override
-  _MapLocationSearchState createState() => _MapLocationSearchState();
+  State<MapLocationSearch> createState() => _MapLocationSearchState();
 }
 
 class _MapLocationSearchState extends State<MapLocationSearch> {
   final TextEditingController _controller = TextEditingController();
-  List<LocationPrediction> _locationPredictions =
-      []; // Store LocationPredictions
+
+  List<LocationPrediction> _locationPredictions = [];
+  // Store LocationPredictions
   final ValueNotifier<bool> _haveText = ValueNotifier(false);
 
   // Fetch location predictions from Google Places API
