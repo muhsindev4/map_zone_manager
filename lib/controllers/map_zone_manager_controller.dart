@@ -47,8 +47,6 @@ class MapZoneManagerController extends ChangeNotifier {
     this.onError,
   });
 
-
-
   // Private Methods
   /// Generates a unique ID for a new zone based on the current zone count.
   ///
@@ -130,8 +128,9 @@ class MapZoneManagerController extends ChangeNotifier {
       if (onZoneAdded != null) {
         onZoneAdded!(zone);
       }
-    }else{
-      onError?.call("A zone must have at least $minimumCoordinatesForAdding coordinates. Please add more coordinates before proceeding.");
+    } else {
+      onError?.call(
+          "A zone must have at least $minimumCoordinatesForAdding coordinates. Please add more coordinates before proceeding.");
     }
   }
 

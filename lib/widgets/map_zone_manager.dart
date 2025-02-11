@@ -169,11 +169,10 @@ class _MapZoneManagerState extends State<MapZoneManager> {
   Future<void> _initialize() async {
     _mapZoneManagerController = widget.mapZoneManagerController ??
         MapZoneManagerController(
-          onZoneAdded: widget.onZoneAdded,
-          multiZone: widget.multiZone,
-          minimumCoordinatesForAdding: widget.minimumCoordinatesForAdding,
-          onError: widget.onError
-        );
+            onZoneAdded: widget.onZoneAdded,
+            multiZone: widget.multiZone,
+            minimumCoordinatesForAdding: widget.minimumCoordinatesForAdding,
+            onError: widget.onError);
     if (widget.zones != null) {
       _mapZoneManagerController!.zones.addAll(widget.zones!);
     }
