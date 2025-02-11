@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -10,6 +12,8 @@ class MapZoneManagerController extends ChangeNotifier {
   // Fields
   /// List of all the zones that have been created.
   final List<Zone> zones = [];
+
+  final Function(String message)? onError;
 
   /// Whether multiple zones are allowed to be created (defaults to true).
   final bool? multiZone;
@@ -40,7 +44,10 @@ class MapZoneManagerController extends ChangeNotifier {
     this.onZoneAdded,
     this.minimumCoordinatesForAdding,
     this.multiZone,
+    this.onError,
   });
+
+
 
   // Private Methods
   /// Generates a unique ID for a new zone based on the current zone count.
@@ -123,6 +130,8 @@ class MapZoneManagerController extends ChangeNotifier {
       if (onZoneAdded != null) {
         onZoneAdded!(zone);
       }
+    }else{
+      onError?.call("A zone must have at least $minimumCoordinatesForAdding coordinates. Please add more coordinates before proceeding.");
     }
   }
 

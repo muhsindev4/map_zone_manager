@@ -172,6 +172,7 @@ class _MapZoneManagerState extends State<MapZoneManager> {
           onZoneAdded: widget.onZoneAdded,
           multiZone: widget.multiZone,
           minimumCoordinatesForAdding: widget.minimumCoordinatesForAdding,
+          onError: widget.onError
         );
     if (widget.zones != null) {
       _mapZoneManagerController!.zones.addAll(widget.zones!);
